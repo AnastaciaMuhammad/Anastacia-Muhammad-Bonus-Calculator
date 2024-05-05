@@ -75,6 +75,8 @@ token token_stream::get()
     case 's': // sin function
     case 'c': // cos function
     case 't': // tan function
+    case 'l': // log function
+    case 'e': // exponential function
         return token(ch);
     case '.':
     case '0':
@@ -142,6 +144,15 @@ double primary()
         return std::cos(primary());
     case 't': // tan function
         return std::tan(primary());
+    case 'l': // log function
+    {
+        double d = primary();
+        if (d <= 0)
+            throw std::runtime_error("logarithm of non-positive number");
+        return std::log(d);
+    }
+    case 'e': // exponential function
+        return std::exp(primary());
     default:
         throw std::runtime_error("primary expected");
     }
@@ -227,10 +238,10 @@ void calculate()
 
             if (t.kind() == help)
             {
-                std::cout << "Simple Calculator Commands:\n"
+                std::cout << "Scientific Calculator Commands:\n"
                              "- Enter expressions using numbers and operators: +, -, *, /, % (modulus), ^ (exponentiation).\n"
                              "- Use parentheses for grouping, e.g., (3 + 4) * 2.\n"
-                             "- Supported functions: sin, cos, tan.\n"
+                             "- Supported functions: sin, cos, tan, log, exp.\n"
                              "- Type 'q' to quit.\n"
                              "- Type 'c' to clear the screen.\n";
             }
